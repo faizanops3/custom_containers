@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   configurator:
-    image: frappe/erpnext:${VERSION:?No image version set}
+    image: faizan44/erpnext:${VERSION:?No image version set}
     volumes:
       - sites:/home/frappe/frappe-bench/sites
     command:

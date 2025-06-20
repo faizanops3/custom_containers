@@ -1,5 +1,5 @@
 x-custom-image: &custom_image
-  image: ${IMAGE_NAME:-docker.io/frappe/erpnext}:${VERSION?No version set}
+  image: ${IMAGE_NAME:-docker.io/faizan44/erpnext}:${VERSION?No version set}
 
 version: "3.9"
 

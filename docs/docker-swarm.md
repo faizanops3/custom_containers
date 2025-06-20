@@ -1,12 +1,13 @@
 ## Topics
 
-- [Install Prerequisites](#install-prerequisites)
-- [Setup Docker Swarm](#setup-docker-swarm)
-- [Setup Traefik](#setup-traefik)
-- [Setup Portainer](#setup-portainer)
-- [Setup MariaDB](#setup-mariadb)
-- [Setup Swarm CRON](#setup-swarm-cron)
-- [Setup ERPNext](#setup-erpnext)
+- [Topics](#topics)
+  - [Install Prerequisites](#install-prerequisites)
+  - [Setup Docker Swarm](#setup-docker-swarm)
+  - [Setup Traefik](#setup-traefik)
+  - [Setup Portainer](#setup-portainer)
+  - [Setup MariaDB](#setup-mariadb)
+  - [Setup Swarm CRON](#setup-swarm-cron)
+  - [Setup ERPNext](#setup-erpnext)
 
 ### Install Prerequisites
 
@@ -52,6 +53,7 @@ Note: traefik and portainer yamls specified in the further commands are in `comp
 Initialize swarm
 
 ```shell
+docker swarm init
 docker swarm init --advertise-addr=X.X.X.X
 ```
 
@@ -72,13 +74,15 @@ docker node update --label-add traefik-public.traefik-public-certificates=true $
 Set email and traefik domain
 
 ```shell
-export EMAIL=admin@example.com
-export TRAEFIK_DOMAIN=traefik.example.com
+export EMAIL=faizanops@alazka.ai
+export TRAEFIK_DOMAIN=erp-traefik.bloomi5.com
 # or for dind
 export TRAEFIK_DOMAIN=traefik.localhost
 ```
 
 Set `HASHED_PASSWORD`
+
+admin123
 
 ```shell
 export HASHED_PASSWORD=$(openssl passwd -apr1)
@@ -117,7 +121,7 @@ Install Portainer in production
 
 ```shell
 # Set domain
-export PORTAINER_DOMAIN=portainer.example.com
+export PORTAINER_DOMAIN=erp-portainer.bloomi5.com
 # Install
 docker stack deploy -c compose/portainer.yml portainer
 ```
