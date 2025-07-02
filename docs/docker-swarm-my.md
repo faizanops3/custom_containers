@@ -10,9 +10,13 @@
   - [Setup bench](#setup-bench)
   - [Configure the bench](#configure-the-bench)
   - [Create-site](#create-site)
-  - [Setup MariaDB](#setup-mariadb-1)
-  - [Setup Swarm CRON](#setup-swarm-cron-1)
-  - [Setup ERPNext](#setup-erpnext)
+- [After adding one site add second site](#after-adding-one-site-add-second-site)
+  - [Then re-deploy](#then-re-deploy)
+  - [Create-site](#create-site-1)
+  - [Backup and Restore](#backup-and-restore)
+    - [Backup](#backup)
+    - [Restore](#restore)
+    - [Upload the backup to GitHub (Free solution)](#upload-the-backup-to-github-free-solution)
 
 ### Install Prerequisites
 
@@ -135,8 +139,10 @@ docker stack deploy -c compose/swarm-cron.yml swarm-cron
 ### Setup bench
 
 ```sh
-docker stack deploy -c compose/erpnext.yml sales
+docker stack deploy -c compose/erpnext-multi-my.yml sales
 ```
+
+> Here instead of `SITES` use `SITE1`, `SITE2`, ... , for multiple sites.
 
 ### Configure the bench
 
@@ -156,22 +162,49 @@ docker stack deploy -c compose/create-site.yml create-site
 
 ---
 
-### Setup MariaDB
+## After adding one site add second site
 
-- Go to Stacks > Add and create stack called `mariadb`.
-- Set `DB_PASSWORD` environment variable to set mariadb root password. Defaults to `admin`.
-- Use `compose/mariadb.yml` to create the stack.
+### Then re-deploy
 
-### Setup Swarm CRON
+```sh
+docker stack deploy -c compose/erpnext.yml sales
+```
 
-In case of docker setup there is not CRON scheduler running. It is needed to take periodic backups.
+> Uncheck -->> `Re-pull image and redeploy`
 
-- Go to Stacks > Add and create stack called `swarm-cron`.
-- Use `compose/swarm-cron.yml` to create the stack.
-- Change the `TZ` environment variable as per your timezone.
+### Create-site
 
-### Setup ERPNext
+```sh
+docker stack deploy -c compose/create-site.yml create-site
+```
 
-- `compose/erpnext.yml`: Use to create the `erpnext` stack. Set variable names mentioned in the YAML comments.
-- `compose/configure-erpnext.yml`: Use to setup `sites/common_site_config.json`. Set `VERSION` and optionally `BENCH_NAME` environment variables.
-- `compose/create-site.yml`: Use to create a site. Set `VERSION` and optionally `BENCH_NAME` environment variables. Change the command for site name, apps to be installed, admin password and db root password.
+> remove after complete
+
+---
+
+### Backup and Restore
+
+#### Backup
+
+> It is already happening at every 6 hours cron
+
+- It generates two files,
+- at this dir `/home/frappe/frappe-bench/sites/<site-name>/private/backups`
+
+**Example**
+
+```bash
+20250701_120009-sales_bloomi5_com-database.sql.gz
+20250701_180010-sales_bloomi5_com-site_config_backup.json
+```
+
+> `sales_bloomi5_com` is the site name
+
+#### Restore
+
+1. Rename `20250701_180010-sales_bloomi5_com-site_config_backup.json` to `site_config.json`
+2. and upload to this location `/home/frappe/frappe-bench/sites/<site-name>`.
+3. upload the `20250701_120009-sales_bloomi5_com-database.sql.gz` to `/home/frappe/frappe-bench/sites/<site-name>/private/backups` as it is.
+4. then run this command. `bench --site <site-name> restore /home/frappe/frappe-bench/sites/<site-name>/private/backups/<the-selected-file-name>.sql.gz`
+
+#### Upload the backup to GitHub (Free solution)

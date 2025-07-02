@@ -10,9 +10,11 @@ services:
       - new-site
       - --no-mariadb-socket
       - --install-app=erpnext
+      - --install-app=india_compliance
       - --db-root-password=admin
       - --admin-password=admin
-      - erp.example.com
+      - erpnext.bloomi5.com
+
     deploy:
       restart_policy:
         condition: none
