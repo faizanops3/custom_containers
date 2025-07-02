@@ -11,6 +11,8 @@ services:
       - --no-mariadb-socket
       - --install-app=erpnext
       - --install-app=india_compliance
+      - --install-app=lms
+      - --install-app=crm
       - --db-root-password=admin
       - --admin-password=admin
       - erpnext.bloomi5.com
